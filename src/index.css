@@ -1,24 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Fondos */
-  --color-bg-base: #0D0D0F;
-  --color-bg-surface: #12141A;
-  --color-bg-elevated: #1E2130;
+  /* Fondos de página */
+  --color-bg-base: #F1F5F9;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-elevated: #F2F4F6;
 
-  /* Acentos */
-  --color-accent-primary: #3B5BDB;
-  --color-accent-border: #6366F1;
+  /* Obsidian — color primario de texto y botones principales */
+  --color-obsidian: #0F172A;
+  --color-obsidian-soft: #131B2E;
 
-  /* Estados */
+  /* Naranja — acento secundario (cart buttons, active states, badges) */
+  --color-orange: #FF6B35;
+  --color-orange-dim: #E55A26;
+
+  /* Texto */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+  --color-text-on-dark: #FFFFFF;
+
+  /* Bordes */
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Estados de pedido */
   --color-status-pending: #F59E0B;
   --color-status-preparing: #3B82F6;
   --color-status-delivered: #22C55E;
   --color-status-cancelled: #EF4444;
 
-  /* Texto */
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #94A3B8;
+  /* Utilitarios */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  /* Footer */
+  --color-footer-bg: #0F172A;
+
+  /* Fuente */
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 *, *::before, *::after {
@@ -27,8 +49,8 @@
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--color-bg-base);
   color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
 }
-
