@@ -1,10 +1,14 @@
 import { useState } from "react"
 import { Link, NavLink } from "react-router-dom"
+
 import useAuthStore from "../../modules/auth/store/auth.store"
+import useCartStore from "../../modules/cart/store/cart.store"
 
 export default function Navbar() {
   const user = useAuthStore((state) => state.user)
   const clearUser = useAuthStore((state) => state.clearUser)
+  const cartItems = useCartStore((s) => s.items)
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   return (
@@ -59,7 +63,7 @@ export default function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11" />
             </svg>
             <span className="absolute -top-2 -right-2 bg-orange text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-              0
+              {cartCount}
             </span>
           </NavLink>
 

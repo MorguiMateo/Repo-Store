@@ -29,7 +29,7 @@ export default function ProductCard({ product }: Props) {
 
         <h3 className="text-text-primary font-semibold text-base">
           {product.nombre}
-        </h3>
+        </h3> 
         {/* line-clamp-2 es para que el texto se corte y se muestre con ... */}
         {product.descripcion && (
           <p className="text-text-secondary text-sm line-clamp-2">

@@ -33,5 +33,7 @@ export interface Categoria {
     disponible: boolean
     categorias: ProductoCategoria[]
     ingredientes: ProductoIngrediente[]
-    eliminado: boolean
+    created_at: string
+    updated_at: string
+    deleted_at: string | null
   }
