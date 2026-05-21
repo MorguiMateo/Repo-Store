@@ -1,10 +1,12 @@
 import type { Product } from "../../../shared/types/product"
+import useCartStore from "../../cart/store/cart.store"
 
 interface Props {
   product: Product
 }
 
 export default function ProductCard({ product }: Props) {
+  const addItem = useCartStore((s) => s.addItem)
   const imagen = product.imagenes_url[0] ?? "/placeholder.jpg"
   const categoria = product.categorias.find((c) => c.es_principal)?.categoria.nombre
 
@@ -41,7 +43,7 @@ export default function ProductCard({ product }: Props) {
           </span>
 
           {product.disponible ? (
-            <button className="bg-obsidian text-text-on-dark text-sm font-semibold px-4 py-2 rounded-xl hover:bg-obsidian-soft">
+            <button onClick={() => addItem(product)} className="bg-obsidian text-text-on-dark text-sm font-semibold px-4 py-2 rounded-xl hover:bg-obsidian-soft">
               Agregar
             </button>
           ) : (
