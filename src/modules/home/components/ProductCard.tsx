@@ -66,7 +66,7 @@ export default function ProductCard({ product }: Props) {
             /* disponible=true pero se agotó el stock */
             <span className="text-xs text-danger font-semibold">Sin stock</span>
           ) : (
-            <button onClick={() => addItem(product)} className="bg-obsidian text-text-on-dark text-sm font-semibold px-4 py-2 rounded-xl hover:bg-obsidian-soft">
+            <button onClick={() => addItem(product)} className="bg-obsidian text-text-on-dark text-sm font-semibold px-4 py-2 rounded-xl hover:bg-orange transition-colors">
               Agregar
             </button>
           )}

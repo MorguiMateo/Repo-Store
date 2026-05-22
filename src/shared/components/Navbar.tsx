@@ -19,7 +19,8 @@ export default function Navbar() {
       // invalida el refresh token en el back para que la cookie deje de funcionar
       await instance.post("/auth/logout")
     } finally {
-//utilizo finaly pa que si el back devuelve error el usuario igualmente puede cerrar sesion en el front.      clearUser()
+      // si el back falla el usuario igual puede cerrar sesión en el front
+      clearUser()
       setDropdownOpen(false)
     }
   }
@@ -45,7 +46,7 @@ export default function Navbar() {
             end
             className={({ isActive }) =>
               isActive
-                ? "text-sm font-semibold text-orange border-b-2 border-orange pb-0.5"
+                ? "text-sm font-semibold text-orange"
                 : "text-sm text-text-primary hover:text-orange transition-colors"
             }
           >
@@ -55,7 +56,7 @@ export default function Navbar() {
             to="/orders"
             className={({ isActive }) =>
               isActive
-                ? "text-sm font-semibold text-orange border-b-2 border-orange pb-0.5"
+                ? "text-sm font-semibold text-orange"
                 : "text-sm text-text-primary hover:text-orange transition-colors"
             }
           >

@@ -8,8 +8,10 @@ export function setupInterceptors(instance: AxiosInstance) {
       const isUnauthorized = error.response?.status === 401
       // evita loop infinito: si el refresh falla con 401 no reintentamos
       const isRefreshUrl = error.config?.url?.includes("/auth/refresh")
+      // /auth/me se usa para chequear sesión — un 401 ahí es esperado, lo maneja App.tsx con clearUser()
+      const isSessionCheck = error.config?.url?.includes("/auth/me")
 
-      if (isUnauthorized && !isRefreshUrl) {
+      if (isUnauthorized && !isRefreshUrl && !isSessionCheck) {
         try {
           // pedimos un token nuevo al navegador
           await instance.post("/auth/refresh")
