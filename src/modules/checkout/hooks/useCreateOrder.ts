@@ -8,7 +8,7 @@ type CreateOrderBody = {
   forma_pago_codigo: FormaPagoCodigo
   direccion_id?: number | null
   notas?: string
-  detalles: { producto_id: number; cantidad: number }[]
+  detalles: { producto_id: number; cantidad: number; personalizacion: number[] }[]
 }
 
 export function useCreateOrder() {
@@ -25,6 +25,8 @@ export function useCreateOrder() {
         detalles: items.map((item) => ({
           producto_id: item.id,
           cantidad: item.quantity,
+          // ingredientes que el cliente pidió remover
+          personalizacion: item.personalizacion,
         })),
       }
       return instance.post("/pedidos", body)

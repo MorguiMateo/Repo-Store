@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 
 import useAuthStore from "../../modules/auth/store/auth.store"
 import useCartStore from "../../modules/cart/store/cart.store"
+import instance from "../api/axios.instance"
 
 export default function Navbar() {
   const user = useAuthStore((state) => state.user)
@@ -10,6 +11,25 @@ export default function Navbar() {
   const cartItems = useCartStore((s) => s.items)
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [searchInput, setSearchInput] = useState("")
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      // invalida el refresh token en el back para que la cookie deje de funcionar
+      await instance.post("/auth/logout")
+    } finally {
+//utilizo finaly pa que si el back devuelve error el usuario igualmente puede cerrar sesion en el front.      clearUser()
+      setDropdownOpen(false)
+    }
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+//navigate en lugar de reacargar la pagina cambia la url del navegaodr y para que esta sea correcta
+    e.preventDefault()
+    // encodeURIComponent convierte espacios y caracteres especiales a formato válido de URL
+    navigate(`/?q=${encodeURIComponent(searchInput)}`)
+  }
 
   return (
     <header className="bg-bg-surface border-b border-border sticky top-0 z-50">
@@ -46,16 +66,15 @@ export default function Navbar() {
         <div className="flex items-center gap-4 ml-auto">
 
           {/* Search */}
-          <div className="hidden md:flex items-center gap-2 bg-bg-elevated border border-border rounded-full px-4 h-9">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
+          <form onSubmit={handleSearch} className="hidden md:flex bg-bg-elevated border border-border rounded-full px-4 h-9">
             <input
               type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Buscar productos..."
               className="bg-transparent text-sm text-text-primary placeholder-text-muted outline-none w-48"
             />
-          </div>
+          </form>
 
           {/* Carrito */}
           <NavLink to="/cart" className="relative text-text-primary hover:text-orange transition-colors">
@@ -85,7 +104,7 @@ export default function Navbar() {
                   <p className="px-4 pb-2 text-xs text-text-muted truncate">{user.email}</p>
                   <hr className="border-border" />
                   <button
-                    onClick={() => { clearUser(); setDropdownOpen(false) }}
+                    onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-bg-elevated transition-colors"
                   >
                     Cerrar sesión

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import type { Order, OrderStatus } from "../../../shared/types/order"
 
 //en lugar de llenar de if y condiciones el codigo lo defino arriba para luego
@@ -48,7 +49,12 @@ export default function OrderCard({ order }: { order: Order }) {
 
       <div className="flex justify-between items-center border-t border-border pt-4">
         <span className="text-text-muted text-xs">{fecha}</span>
-        <span className="font-bold text-text-primary">${order.total}</span>
+        <div className="flex items-center gap-4">
+          <span className="font-bold text-text-primary">${order.total}</span>
+          <Link to={`/orders/${order.id}`} className="text-orange text-sm font-semibold hover:underline">
+            Ver detalle →
+          </Link>
+        </div>
       </div>
 
     </div>

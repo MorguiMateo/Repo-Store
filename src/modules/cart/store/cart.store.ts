@@ -8,6 +8,8 @@ interface CartState {
   addItem: (product: Product) => void
   removeItem: (id: number) => void
   updateQuantity: (id: number, quantity: number) => void
+  // marca o desmarca un ingrediente como "a remover" en un item
+  togglePersonalizacion: (itemId: number, ingredienteId: number) => void
   clearCart: () => void
 }
 
@@ -28,7 +30,8 @@ const useCartStore = create<CartState>()(
             ),
           })
         } else {
-          set({ items: [...get().items, { ...product, quantity: 1 }] })
+          // personalizacion arranca vacío, el usuario lo edita en checkout
+          set({ items: [...get().items, { ...product, quantity: 1, personalizacion: [] }] })
         }
       },
 
@@ -38,12 +41,29 @@ const useCartStore = create<CartState>()(
       },
 
       //se aplica sobre "+" "-" para directamente alterar la cantidad.
-      //nos permite aumentar de 10 en 10 si hubiera un imput
       updateQuantity: (id, quantity) => {
         set({
           items: get().items.map((item) =>
             item.id === id ? { ...item, quantity } : item
           ),
+        })
+      },
+
+      togglePersonalizacion: (itemId, ingredienteId) => {
+        set({
+          // recorremos todos los items y modifica el que coincide con itemId
+          items: get().items.map((item) => {
+            if (item.id !== itemId) return item
+            // vemos si el ingrediente ya estaba marcado
+            const selected = item.personalizacion.includes(ingredienteId)
+            return {
+              ...item,
+              // si estaba lo sacamos y si no estaba lo agregamos
+              personalizacion: selected
+                ? item.personalizacion.filter((id) => id !== ingredienteId)
+                : [...item.personalizacion, ingredienteId],
+            }
+          }),
         })
       },
 

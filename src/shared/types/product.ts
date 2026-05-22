@@ -1,3 +1,9 @@
+export interface UnidadMedida {
+  id: number
+  nombre: string
+  simbolo: string
+}
+
 export interface Categoria {
     id: number
     nombre: string
@@ -31,6 +37,11 @@ export interface Categoria {
     imagenes_url: string[]
     stock_cantidad: number
     disponible: boolean
+    /*Es null porque en el uml el campo unidad_venta_id es null. 
+    Un producto como "empanada" no tiene unidad, simplemente cuesta $3 por pieza. 
+    Un producto como "carne" sí tiene unidad ("kg"). El | null le dice a TypeScript 
+    que hay que chequear si existe antes de usarlo. */
+    unidad_venta: UnidadMedida | null
     categorias: ProductoCategoria[]
     ingredientes: ProductoIngrediente[]
     created_at: string
