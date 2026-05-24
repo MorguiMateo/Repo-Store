@@ -13,7 +13,9 @@ interface LoginResponse {
   email: string
   nombre: string
   apellido: string
+  celular: string | null
   roles: string[]
+  created_at: string
 }
 //custom hook del llogin
 export function useLogin() {
@@ -21,7 +23,7 @@ export function useLogin() {
   const setUser = useAuthStore((s) => s.setUser)
 
   return useMutation({
-    //body recibe mail y contra
+    // body recibe mail y contra. el back setea cookie httpOnly con el JWT.
     mutationFn: (body: LoginBody) =>
       instance.post<LoginResponse>("/auth/login", body).then((r) => r.data),
     //user = valor ddevuelto por mutationFn

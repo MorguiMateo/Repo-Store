@@ -8,7 +8,7 @@ type CreateOrderBody = {
   forma_pago_codigo: FormaPagoCodigo
   direccion_id?: number | null
   notas?: string
-  detalles: { producto_id: number; cantidad: number; personalizacion: number[] }[]
+  items: { producto_id: number; cantidad: number; personalizacion: number[] }[]
 }
 
 export function useCreateOrder() {
@@ -22,7 +22,7 @@ export function useCreateOrder() {
     mutationFn: (forma_pago_codigo: FormaPagoCodigo) => {
       const body: CreateOrderBody = {
         forma_pago_codigo,
-        detalles: items.map((item) => ({
+        items: items.map((item) => ({
           producto_id: item.id,
           cantidad: item.quantity,
           // ingredientes que el cliente pidió remover

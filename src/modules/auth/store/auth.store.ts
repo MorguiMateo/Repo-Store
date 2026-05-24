@@ -6,7 +6,9 @@ interface User {
   email: string
   nombre: string
   apellido: string
+  celular?: string | null
   roles: string[]
+  created_at?: string
 }
 
 interface AuthState {

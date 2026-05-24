@@ -28,8 +28,10 @@ export function useCancelOrder(id: string) {
   const navigate = useNavigate()
 
   return useMutation({
-    // el back valida que el estado sea PENDIENTE o CONFIRMADO antes de cancelar
-    mutationFn: () => instance.patch(`/pedidos/${id}/cancelar`),
+    // el back valida que el estado sea PENDIENTE o CONFIRMADO antes de cancelar.
+    // motivo es obligatorio en el body.
+    mutationFn: (motivo: string) =>
+      instance.post(`/pedidos/${id}/cancelar`, { motivo }),
     onSuccess: () => {
       // fuerza un refetch para que la lista de pedidos refleje el nuevo estado
       queryClient.invalidateQueries({ queryKey: ["pedidos"] })

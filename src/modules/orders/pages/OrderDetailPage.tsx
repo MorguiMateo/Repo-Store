@@ -68,7 +68,10 @@ export default function OrderDetailPage() {
             <p className="text-danger text-sm">No se pudo cancelar el pedido. Intentá de nuevo.</p>
           )}
           <button
-            onClick={() => cancelOrder()}
+            onClick={() => {
+              const motivo = window.prompt("Contanos el motivo de la cancelación:")?.trim()
+              if (motivo) cancelOrder(motivo)
+            }}
             disabled={isCancelling}
             className="text-sm text-danger hover:underline disabled:opacity-50"
           >
