@@ -35,6 +35,7 @@ export function useCreateOrder() {
     onSuccess: () => {
       clearCart()
       queryClient.invalidateQueries({ queryKey: ["pedidos"] })
+      queryClient.invalidateQueries({ queryKey: ["productos"] })
       navigate("/orders")
     },
   })
