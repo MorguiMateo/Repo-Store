@@ -2,14 +2,12 @@ import { useQuery } from "@tanstack/react-query"
 import instance from "../../../shared/api/axios.instance"
 import type { Product } from "../../../shared/types/product"
 
-export const useProducts = (q?: string) => {
+export const useProducts = () => {
   return useQuery({
-    queryKey: ['productos', { q }],
+    queryKey: ['productos'],
     queryFn: async () => {
       const response = await instance.get<Product[]>('/productos', {
-        // si q es undefined Axios no lo manda y el back devuelve todos los productos
-        // esto para que la home muestre el catálogo completo cuando no hay búsqueda activa
-        params: { q },
+        params: { skip: 0, limit: 200 },
       })
       return response.data
     },

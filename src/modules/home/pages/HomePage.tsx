@@ -3,12 +3,15 @@ import { useProducts } from "../hooks/useProducts"
 import ProductGrid from "../components/ProductGrid"
 
 export default function HomePage() {
-  // useSearchParams lee los query params de la URL, q = "pizza"
   const [searchParams] = useSearchParams()
-  // || undefined convierte string vacío a undefined para que useProducts no mande ?q= al back
   const q = searchParams.get("q") || undefined
 
-  const { data, isLoading, error } = useProducts(q)
+  const { data: allProducts, isLoading, error } = useProducts()
+
+  // filtrado client-side sobre la lista completa
+  const data = q && allProducts
+    ? allProducts.filter((p) => p.nombre.toLowerCase().includes(q.toLowerCase()))
+    : allProducts
 
   return (
     <div className="py-10">

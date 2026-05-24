@@ -3,21 +3,26 @@ import type { AxiosInstance } from "axios"
 export function setupInterceptors(instance: AxiosInstance) {
   instance.interceptors.response.use(
     (response) => response,
-    // si la respuesta llega con error entra acá
     async (error) => {
-      const isUnauthorized = error.response?.status === 401
-      // /auth/me se usa para chequear sesión — un 401 ahí es esperado, lo maneja App.tsx con clearUser()
-      const isSessionCheck = error.config?.url?.includes("/auth/me")
-      // /auth/login con credenciales inválidas también devuelve 401: lo deja burbujear al form
-      const isLoginAttempt = error.config?.url?.includes("/auth/login")
+      const url: string = error.config?.url ?? ''
 
-      // si la cookie expiró, no hay refresh: lo rajamos al login.
-      if (isUnauthorized && !isSessionCheck && !isLoginAttempt) {
-        window.location.href = "/login"
+      if (error.response?.status !== 401) return Promise.reject(error)
+
+      // login y refresh: el caller maneja el error directamente
+      if (url.includes('/auth/login') || url.includes('/auth/refresh')) return Promise.reject(error)
+
+      // ya se reintentó una vez — evita loop infinito si el retry también da 401
+      if (error.config._retry) return Promise.reject(error)
+      error.config._retry = true
+
+      try {
+        await instance.post('/auth/refresh')
+        return instance(error.config)
+      } catch {
+        // /auth/me lo maneja App.tsx → clearUser() → ProtectedRoute redirige a /login
+        if (!url.includes('/auth/me')) window.location.href = '/login'
+        return Promise.reject(error)
       }
-
-      // cualquier otro error (500, 404, etc.) se rechaza.
-      return Promise.reject(error)
     }
   )
 }
