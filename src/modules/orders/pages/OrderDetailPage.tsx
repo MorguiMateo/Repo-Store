@@ -56,6 +56,20 @@ export default function OrderDetailPage() {
             <span className="text-text-primary font-semibold">${detail.subtotal_snap}</span>
           </div>
         ))}
+        <div className="flex justify-between text-text-muted text-sm border-t border-border pt-4">
+          <span>Subtotal</span>
+          <span>${order.subtotal}</span>
+        </div>
+        {order.descuento > 0 && (
+          <div className="flex justify-between text-text-muted text-sm">
+            <span>Descuento</span>
+            <span>-${order.descuento}</span>
+          </div>
+        )}
+        <div className="flex justify-between text-text-muted text-sm">
+          <span>Envío</span>
+          <span>${order.costo_envio}</span>
+        </div>
         <div className="flex justify-between font-bold text-text-primary text-lg border-t border-border pt-4">
           <span>Total</span>
           <span className="text-orange">${order.total}</span>

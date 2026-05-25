@@ -7,7 +7,7 @@ export const useProducts = () => {
     queryKey: ['productos'],
     queryFn: async () => {
       const response = await instance.get<Product[]>('/productos', {
-        params: { skip: 0, limit: 200 },
+        params: { skip: 0, limit: 100 },
       })
       return response.data
     },

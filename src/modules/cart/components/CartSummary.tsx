@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import useCartStore from "../store/cart.store"
+import { COSTO_ENVIO } from "../../../shared/constants"
 
 export default function CartSummary() {
   const items = useCartStore((s) => s.items)
@@ -17,9 +18,19 @@ export default function CartSummary() {
         <span>{totalItems}</span>
       </div>
 
+      <div className="flex justify-between text-text-secondary">
+        <span>Subtotal</span>
+        <span>${totalPrice}</span>
+      </div>
+
+      <div className="flex justify-between text-text-secondary">
+        <span>Envío</span>
+        <span>${COSTO_ENVIO}</span>
+      </div>
+
       <div className="flex justify-between font-bold text-text-primary text-lg border-t border-border pt-4">
         <span>Total</span>
-        <span className="text-orange">${totalPrice}</span>
+        <span className="text-orange">${totalPrice + COSTO_ENVIO}</span>
       </div>
 
       <button

@@ -45,6 +45,20 @@ export default function OrderCard({ order }: { order: Order }) {
             <span>${detail.subtotal_snap}</span>
           </div>
         ))}
+        <div className="flex justify-between text-text-muted text-sm">
+          <span>Subtotal</span>
+          <span>${order.subtotal}</span>
+        </div>
+        {order.descuento > 0 && (
+          <div className="flex justify-between text-text-muted text-sm">
+            <span>Descuento</span>
+            <span>-${order.descuento}</span>
+          </div>
+        )}
+        <div className="flex justify-between text-text-muted text-sm">
+          <span>Envío</span>
+          <span>${order.costo_envio}</span>
+        </div>
       </div>
 
       <div className="flex justify-between items-center border-t border-border pt-4">

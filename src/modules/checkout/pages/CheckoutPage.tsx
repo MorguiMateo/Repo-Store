@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom"
 import useCartStore from "../../cart/store/cart.store"
 import { useCreateOrder } from "../hooks/useCreateOrder"
 import type { FormaPagoCodigo } from "../../../shared/types/order"
+import { COSTO_ENVIO } from "../../../shared/constants"
 
 const FORMAS_PAGO: { codigo: FormaPagoCodigo; label: string }[] = [
   { codigo: "EFECTIVO",      label: "Efectivo" },
@@ -38,9 +39,17 @@ export default function CheckoutPage() {
           </div>
         ))}
 
+        <div className="flex justify-between text-text-muted text-sm border-t border-border pt-4">
+          <span>Subtotal</span>
+          <span>${totalPrice}</span>
+        </div>
+        <div className="flex justify-between text-text-muted text-sm">
+          <span>Envío</span>
+          <span>${COSTO_ENVIO}</span>
+        </div>
         <div className="flex justify-between font-bold text-text-primary text-lg border-t border-border pt-4">
           <span>Total</span>
-          <span className="text-orange">${totalPrice}</span>
+          <span className="text-orange">${totalPrice + COSTO_ENVIO}</span>
         </div>
       </div>
 
