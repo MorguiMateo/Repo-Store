@@ -17,12 +17,10 @@ export default function HomePage() {
     <div className="py-10">
       <h1 className="text-2xl font-bold text-text-primary mb-2">Nuestros Productos</h1>
 
-      {q ? (
+      {q && (
         <p className="text-text-secondary mb-8">
           Resultados para: <span className="font-semibold text-text-primary">"{q}"</span>
         </p>
-      ) : (
-        <p className="text-text-muted mb-8">Explorá nuestro catálogo</p>
       )}
 
       {isLoading && <p className="text-text-muted text-center py-10">Cargando...</p>}

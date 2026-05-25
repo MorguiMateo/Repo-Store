@@ -16,19 +16,15 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      // invalida el refresh token en el back para que la cookie deje de funcionar
       await instance.post("/auth/logout")
     } finally {
-      // si el back falla el usuario igual puede cerrar sesión en el front
       clearUser()
       setDropdownOpen(false)
     }
   }
 
   const handleSearch = (e: React.FormEvent) => {
-//navigate en lugar de reacargar la pagina cambia la url del navegaodr y para que esta sea correcta
     e.preventDefault()
-    // encodeURIComponent convierte espacios y caracteres especiales a formato válido de URL
     navigate(`/?q=${encodeURIComponent(searchInput)}`)
   }
 
@@ -45,9 +41,7 @@ export default function Navbar() {
             to="/"
             end
             className={({ isActive }) =>
-              isActive
-                ? "text-sm font-semibold text-orange"
-                : "text-sm text-text-primary hover:text-orange transition-colors"
+              isActive ? "text-sm font-semibold text-orange" : "text-sm text-text-primary"
             }
           >
             Productos
@@ -55,9 +49,7 @@ export default function Navbar() {
           <NavLink
             to="/orders"
             className={({ isActive }) =>
-              isActive
-                ? "text-sm font-semibold text-orange"
-                : "text-sm text-text-primary hover:text-orange transition-colors"
+              isActive ? "text-sm font-semibold text-orange" : "text-sm text-text-primary"
             }
           >
             Pedidos
@@ -78,7 +70,8 @@ export default function Navbar() {
           </form>
 
           {/* Carrito */}
-          <NavLink to="/cart" className="relative text-text-primary hover:text-orange transition-colors">
+          <NavLink to="/cart" className="relative text-text-primary">
+            {/* Heroicons */}
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11" />
             </svg>
@@ -92,8 +85,9 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="w-9 h-9 rounded-full bg-obsidian text-white flex items-center justify-center hover:bg-obsidian-soft transition-colors"
+                className="w-9 h-9 rounded-full bg-obsidian text-white flex items-center justify-center"
               >
+                {/* Heroicons */}
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
                 </svg>
@@ -106,7 +100,7 @@ export default function Navbar() {
                   <hr className="border-border" />
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-bg-elevated transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-danger"
                   >
                     Cerrar sesión
                   </button>
@@ -114,7 +108,7 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="text-sm text-text-primary hover:text-orange transition-colors">
+            <Link to="/login" className="text-sm text-text-primary">
               Ingresar
             </Link>
           )}
