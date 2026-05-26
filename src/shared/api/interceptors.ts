@@ -13,8 +13,9 @@ export function setupInterceptors(instance: AxiosInstance) {
 
       // ya se reintentó una vez — evita loop infinito si el retry también da 401
       if (error.config._retry) return Promise.reject(error)
+        //
       error.config._retry = true
-
+        //
       try {
         await instance.post('/auth/refresh')
         return instance(error.config)

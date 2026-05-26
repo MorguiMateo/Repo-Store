@@ -29,6 +29,7 @@ export interface Categoria {
     es_removible: boolean
   }
 
+  
   export interface Product {
     id: number
     nombre: string
