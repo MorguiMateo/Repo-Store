@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom"
 import { useOrder, useCancelOrder } from "../hooks/useOrders"
+import { useOrderSocket } from "../hooks/useOrderSocket"
 import type { OrderStatus } from "../../../shared/types/order"
 
 // estados desde los cuales el cliente puede cancelar su pedido
@@ -8,6 +9,8 @@ const CANCELLABLE: OrderStatus[] = ["PENDIENTE", "CONFIRMADO"]
 export default function OrderDetailPage() {
   const { id } = useParams()
   const { data: order, isLoading, isError } = useOrder(id!)
+  // suscripción WebSocket: refresca el pedido en vivo cuando cambia de estado
+  const { connected } = useOrderSocket(id!)
   // renombramos para que isPending e isError no se repitan
   const { mutate: cancelOrder, isPending: isCancelling, isError: cancelError } = useCancelOrder(id!)
 
@@ -35,7 +38,14 @@ export default function OrderDetailPage() {
 
       <div className="bg-bg-surface border border-border rounded-2xl p-6 flex flex-col gap-4 mb-6">
         <div className="flex justify-between text-sm text-text-muted">
-          <span>Estado</span>
+          <span className="flex items-center gap-2">
+            Estado
+            {connected && (
+              <span className="inline-flex items-center gap-1 text-xs text-success">
+                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" /> En vivo
+              </span>
+            )}
+          </span>
           <span className="font-semibold text-text-primary">{order.estado_codigo}</span>
         </div>
         <div className="flex justify-between text-sm text-text-muted">
