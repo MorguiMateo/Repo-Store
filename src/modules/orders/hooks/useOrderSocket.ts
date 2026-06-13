@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
+import { API_BASE_URL } from "../../../shared/api/axios.instance"
 
-// El base del axios es http://localhost:8000/api/v1 → ws://localhost:8000/api/v1/pedidos/ws
-const WS_URL = "http://localhost:8000/api/v1".replace(/^http/, "ws") + "/pedidos/ws"
+// Deriva el WS de la misma base que el axios: http(s)://.../api/v1 → ws(s)://.../api/v1/pedidos/ws
+const WS_URL = API_BASE_URL.replace(/^http/, "ws") + "/pedidos/ws"
 
 
 const TRACKED_EVENTS = ["ORDER_CREATED", "ORDER_STATE_CHANGED"]

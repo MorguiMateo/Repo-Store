@@ -1,0 +1,34 @@
+import { useMutation } from "@tanstack/react-query"
+import instance from "../../../shared/api/axios.instance"
+import useAuthStore from "../store/auth.store"
+
+interface UpdateProfileBody {
+  nombre: string
+  apellido: string
+  celular: string | null
+}
+
+interface UpdateProfileResponse {
+  id: number
+  email: string
+  nombre: string
+  apellido: string
+  celular: string | null
+  roles: string[]
+  created_at: string
+}
+
+// custom hook para que el usuario edite sus propios datos (nombre, apellido, celular).
+// pega a PATCH /auth/me, que actualiza al usuario autenticado segun la cookie.
+export function useUpdateProfile() {
+  const setUser = useAuthStore((s) => s.setUser)
+
+  return useMutation({
+    mutationFn: (body: UpdateProfileBody) =>
+      instance.patch<UpdateProfileResponse>("/auth/me", body).then((r) => r.data),
+    // refrescamos el store con los datos ya persistidos por el back.
+    onSuccess: (user) => {
+      setUser(user)
+    },
+  })
+}

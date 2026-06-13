@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom"
 
 import useAuthStore from "../../modules/auth/store/auth.store"
 import useCartStore from "../../modules/cart/store/cart.store"
+import EditProfileModal from "../../modules/auth/components/EditProfileModal"
 import instance from "../api/axios.instance"
 
 export default function Navbar() {
@@ -11,6 +12,7 @@ export default function Navbar() {
   const cartItems = useCartStore((s) => s.items)
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
   const [searchInput, setSearchInput] = useState("")
   const navigate = useNavigate()
 
@@ -99,6 +101,15 @@ export default function Navbar() {
                   <p className="px-4 pb-2 text-xs text-text-muted truncate">{user.email}</p>
                   <hr className="border-border" />
                   <button
+                    onClick={() => {
+                      setEditOpen(true)
+                      setDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-text-primary hover:bg-bg-elevated transition-colors"
+                  >
+                    Editar perfil
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-danger"
                   >
@@ -115,6 +126,8 @@ export default function Navbar() {
 
         </div>
       </div>
+
+      {editOpen && <EditProfileModal onClose={() => setEditOpen(false)} />}
     </header>
   )
 }
