@@ -114,7 +114,9 @@ export default function CheckoutPage() {
         disabled={isPending}
         className="w-full bg-obsidian text-text-on-dark font-semibold py-3 rounded-xl hover:bg-obsidian-soft transition-colors disabled:opacity-50"
       >
-        {isPending ? "Procesando..." : "Confirmar pedido"}
+        {isPending
+          ? (formaPago === "MERCADOPAGO" ? "Redirigiendo a MercadoPago..." : "Procesando...")
+          : (formaPago === "MERCADOPAGO" ? "Pagar con MercadoPago" : "Confirmar pedido")}
       </button>
     </div>
   )

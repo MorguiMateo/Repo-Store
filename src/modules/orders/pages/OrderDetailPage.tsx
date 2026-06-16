@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom"
+import { useParams, useSearchParams, Link } from "react-router-dom"
 import { useOrder, useCancelOrder } from "../hooks/useOrders"
 import { useOrderSocket } from "../hooks/useOrderSocket"
 import type { OrderStatus } from "../../../shared/types/order"
@@ -6,8 +6,17 @@ import type { OrderStatus } from "../../../shared/types/order"
 // estados desde los cuales el cliente puede cancelar su pedido
 const CANCELLABLE: OrderStatus[] = ["PENDIENTE", "CONFIRMADO"]
 
+// banner según el ?pago= con el que MercadoPago redirige de vuelta (back_urls)
+const PAGO_BANNER: Record<string, { text: string; className: string }> = {
+  success: { text: "¡Pago aprobado! Estamos confirmando tu pedido.", className: "bg-success/10 text-success border-success/30" },
+  pending: { text: "Tu pago quedó pendiente de acreditación.", className: "bg-warning/10 text-warning border-warning/30" },
+  failure: { text: "El pago no se pudo completar. Podés reintentar desde el carrito.", className: "bg-danger/10 text-danger border-danger/30" },
+}
+
 export default function OrderDetailPage() {
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const pagoBanner = PAGO_BANNER[searchParams.get("pago") ?? ""]
   const { data: order, isLoading, isError } = useOrder(id!)
   // suscripción WebSocket: refresca el pedido en vivo cuando cambia de estado
   const { connected } = useOrderSocket(id!)
@@ -35,6 +44,12 @@ export default function OrderDetailPage() {
         </Link>
         <h1 className="text-2xl font-bold text-text-primary">Pedido #{order.id}</h1>
       </div>
+
+      {pagoBanner && (
+        <div className={`border rounded-2xl px-5 py-4 mb-6 text-sm font-medium ${pagoBanner.className}`}>
+          {pagoBanner.text}
+        </div>
+      )}
 
       <div className="bg-bg-surface border border-border rounded-2xl p-6 flex flex-col gap-4 mb-6">
         <div className="flex justify-between text-sm text-text-muted">
