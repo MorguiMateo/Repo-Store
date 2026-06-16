@@ -20,7 +20,7 @@ cp .env.example .env
 pnpm dev
 ```
 
-ruta: <http://localhost:5173>
+Puerto: <http://localhost:5173>
 
 ## Variables de entorno
 
