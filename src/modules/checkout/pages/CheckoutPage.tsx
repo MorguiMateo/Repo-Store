@@ -4,6 +4,21 @@ import useCartStore from "../../cart/store/cart.store"
 import { useCreateOrder } from "../hooks/useCreateOrder"
 import type { FormaPagoCodigo } from "../../../shared/types/order"
 import { COSTO_ENVIO } from "../../../shared/constants"
+import axios from "axios"
+
+// Muestra el detalle de error que envía el backend (RFC 7807: { detail }).
+// Las faltas de stock (producto o ingrediente) se muestran genéricas para NO
+// exponer el inventario interno al cliente.
+function mensajeErrorPedido(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const detail = error.response?.data?.detail
+    if (typeof detail === "string") {
+      if (detail.startsWith("Stock insuficiente")) return "Stock insuficiente"
+      return detail
+    }
+  }
+  return "Hubo un error al crear el pedido. Intentá de nuevo."
+}
 
 const FORMAS_PAGO: { codigo: FormaPagoCodigo; label: string }[] = [
   { codigo: "EFECTIVO",      label: "Efectivo" },
@@ -17,7 +32,7 @@ export default function CheckoutPage() {
   const totalPrice = items.reduce((acc, item) => acc + item.precio_base * item.quantity, 0)
   const [formaPago, setFormaPago] = useState<FormaPagoCodigo>("EFECTIVO")
 
-  const { mutate: createOrder, isPending, isError } = useCreateOrder()
+  const { mutate: createOrder, isPending, isError, error } = useCreateOrder()
 
   if (items.length === 0) return <Navigate to="/" />
 
@@ -105,7 +120,7 @@ export default function CheckoutPage() {
 
       {isError && (
         <p className="text-danger text-sm mb-4">
-          Hubo un error al crear el pedido. Intentá de nuevo.
+          {mensajeErrorPedido(error)}
         </p>
       )}
 
