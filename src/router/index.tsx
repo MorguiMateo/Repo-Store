@@ -8,6 +8,7 @@ import CartPage from "../modules/cart/pages/CartPage";
 import CheckoutPage from "../modules/checkout/pages/CheckoutPage";
 import OrdersPage from "../modules/orders/pages/OrdersPage";
 import OrderDetailPage from "../modules/orders/pages/OrderDetailPage";
+import DireccionesPage from "../modules/direcciones/pages/DireccionesPage";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
           { path: '/orders', element: <OrdersPage /> },
           { path: '/orders/:id', element: <OrderDetailPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
+          { path: '/direcciones', element: <DireccionesPage /> },
         ],
       },
     ],

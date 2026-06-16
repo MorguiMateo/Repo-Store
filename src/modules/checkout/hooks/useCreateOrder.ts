@@ -11,6 +11,12 @@ type CreateOrderBody = {
   items: { producto_id: number; cantidad: number; personalizacion: number[] }[]
 }
 
+// El checkout pasa la forma de pago y la dirección de entrega elegida.
+type CreateOrderInput = {
+  forma_pago_codigo: FormaPagoCodigo
+  direccion_id: number | null
+}
+
 export function useCreateOrder() {
 
   const queryClient = useQueryClient()
@@ -19,9 +25,10 @@ export function useCreateOrder() {
 
   return useMutation({
     // crea el pedido y, si la forma de pago es MercadoPago, genera la preferencia de Checkout PRO
-    mutationFn: async (forma_pago_codigo: FormaPagoCodigo) => {
+    mutationFn: async ({ forma_pago_codigo, direccion_id }: CreateOrderInput) => {
       const body: CreateOrderBody = {
         forma_pago_codigo,
+        direccion_id,
         items: items.map((item) => ({
           producto_id: item.id,
           cantidad: item.quantity,

@@ -109,6 +109,13 @@ export default function Navbar() {
                   >
                     Editar perfil
                   </button>
+                  <Link
+                    to="/direcciones"
+                    onClick={() => setDropdownOpen(false)}
+                    className="block px-4 py-2 text-sm text-text-primary hover:bg-bg-elevated transition-colors"
+                  >
+                    Mis direcciones
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-danger"

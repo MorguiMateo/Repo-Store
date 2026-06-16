@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Navigate } from "react-router-dom"
 import useCartStore from "../../cart/store/cart.store"
 import { useCreateOrder } from "../hooks/useCreateOrder"
+import { useDirecciones } from "../../direcciones/hooks/useDirecciones"
+import DireccionFormModal from "../../direcciones/components/DireccionFormModal"
 import type { FormaPagoCodigo } from "../../../shared/types/order"
 import { COSTO_ENVIO } from "../../../shared/constants"
 import axios from "axios"
@@ -32,14 +34,30 @@ export default function CheckoutPage() {
   const totalPrice = items.reduce((acc, item) => acc + item.precio_base * item.quantity, 0)
   const [formaPago, setFormaPago] = useState<FormaPagoCodigo>("EFECTIVO")
 
+  const { data: direcciones } = useDirecciones()
+  // Selección explícita del usuario; si es null se usa la principal por defecto.
+  const [direccionElegida, setDireccionElegida] = useState<number | null>(null)
+  const [addDireccionOpen, setAddDireccionOpen] = useState(false)
+
   const { mutate: createOrder, isPending, isError, error } = useCreateOrder()
 
   if (items.length === 0) return <Navigate to="/" />
+
+  // Dirección efectiva: la elegida por el usuario, o por defecto la principal (o la primera).
+  const direccionId =
+    direccionElegida ??
+    (direcciones && direcciones.length > 0
+      ? direcciones.find((d) => d.es_principal)?.id ?? direcciones[0].id
+      : null)
 
   // solo los items que tienen al menos un ingrediente removible
   const customizableItems = items.filter((item) =>
     item.ingredientes.some((pi) => pi.es_removible)
   )
+
+  const sinDirecciones = direcciones && direcciones.length === 0
+  // No se puede confirmar sin una dirección de entrega elegida.
+  const puedeConfirmar = direccionId !== null
 
   return (
     <div className="py-10 max-w-2xl mx-auto">
@@ -66,6 +84,54 @@ export default function CheckoutPage() {
           <span>Total</span>
           <span className="text-orange">${totalPrice + COSTO_ENVIO}</span>
         </div>
+      </div>
+
+      {/* dirección de entrega */}
+      <div className="bg-bg-surface border border-border rounded-2xl p-6 flex flex-col gap-3 mb-6">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-text-primary">Dirección de entrega</p>
+          {!sinDirecciones && (
+            <button
+              type="button"
+              onClick={() => setAddDireccionOpen(true)}
+              className="text-sm text-orange font-semibold hover:underline"
+            >
+              + Agregar otra
+            </button>
+          )}
+        </div>
+
+        {sinDirecciones ? (
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-text-secondary">Necesitás cargar una dirección para recibir el pedido.</p>
+            <button
+              type="button"
+              onClick={() => setAddDireccionOpen(true)}
+              className="text-sm text-orange font-semibold hover:underline"
+            >
+              Agregar dirección
+            </button>
+          </div>
+        ) : (
+          direcciones?.map((dir) => (
+            <label key={dir.id} className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="direccion"
+                checked={direccionId === dir.id}
+                onChange={() => setDireccionElegida(dir.id)}
+                className="accent-orange mt-1"
+              />
+              <span className="text-sm text-text-secondary">
+                <span className="text-text-primary font-medium">{dir.alias || dir.linea1}</span>
+                {dir.es_principal && <span className="text-orange"> · Principal</span>}
+                <br />
+                {dir.linea1}
+                {dir.linea2 ? `, ${dir.linea2}` : ""} — {dir.ciudad}
+              </span>
+            </label>
+          ))
+        )}
       </div>
 
       {/* sección x si ningún item tiene ingredientes removibles */}
@@ -125,14 +191,22 @@ export default function CheckoutPage() {
       )}
 
       <button
-        onClick={() => createOrder(formaPago)}
-        disabled={isPending}
+        onClick={() => createOrder({ forma_pago_codigo: formaPago, direccion_id: direccionId })}
+        disabled={isPending || !puedeConfirmar}
         className="w-full bg-obsidian text-text-on-dark font-semibold py-3 rounded-xl hover:bg-obsidian-soft transition-colors disabled:opacity-50"
       >
         {isPending
           ? (formaPago === "MERCADOPAGO" ? "Redirigiendo a MercadoPago..." : "Procesando...")
           : (formaPago === "MERCADOPAGO" ? "Pagar con MercadoPago" : "Confirmar pedido")}
       </button>
+
+      {addDireccionOpen && (
+        <DireccionFormModal
+          onClose={() => setAddDireccionOpen(false)}
+          // selecciona automáticamente la dirección recién creada
+          onSaved={(saved) => setDireccionElegida(saved.id)}
+        />
+      )}
     </div>
   )
 }
