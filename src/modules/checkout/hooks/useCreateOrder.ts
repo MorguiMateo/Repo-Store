@@ -11,7 +11,7 @@ type CreateOrderBody = {
   items: { producto_id: number; cantidad: number; personalizacion: number[] }[]
 }
 
-// El checkout pasa la forma de pago y la dirección de entrega elegida.
+//el checkout pasa la forma de pago y la direccion de entrega elegida
 type CreateOrderInput = {
   forma_pago_codigo: FormaPagoCodigo
   direccion_id: number | null
@@ -24,7 +24,7 @@ export function useCreateOrder() {
   const { items, clearCart } = useCartStore()
 
   return useMutation({
-    // crea el pedido y, si la forma de pago es MercadoPago, genera la preferencia de Checkout PRO
+    //crea el pedido y, si la forma de pago es mercado pago, genera la preferencia del checkout
     mutationFn: async ({ forma_pago_codigo, direccion_id }: CreateOrderInput) => {
       const body: CreateOrderBody = {
         forma_pago_codigo,
@@ -32,13 +32,13 @@ export function useCreateOrder() {
         items: items.map((item) => ({
           producto_id: item.id,
           cantidad: item.quantity,
-          // ingredientes que el cliente pidió remover
+          //los ingredientes que el cliente saco
           personalizacion: item.personalizacion,
         })),
       }
       const { data: pedido } = await instance.post<Order>("/pedidos", body)
 
-      // MercadoPago: pedimos al backend la preferencia y devolvemos el init_point para redirigir.
+      //mercado pago: le pedimos al back la preferencia y devolvemos el init_point para redirigir
       if (forma_pago_codigo === "MERCADOPAGO") {
         const { data } = await instance.post<{ init_point: string }>("/pagos/preferencia", {
           pedido_id: pedido.id,
@@ -47,7 +47,7 @@ export function useCreateOrder() {
       }
       return { initPoint: null as string | null }
     },
-    // vacía carrito, invalida cache y redirige (a MercadoPago si hay init_point, si no a /orders)
+    //vacia el carrito, invalida la cache y redirige (a mercado pago si hay init_point, si no a /orders)
     onSuccess: ({ initPoint }) => {
       clearCart()
       queryClient.invalidateQueries({ queryKey: ["pedidos"] })

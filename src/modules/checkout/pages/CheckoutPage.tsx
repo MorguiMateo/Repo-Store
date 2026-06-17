@@ -8,9 +8,8 @@ import type { FormaPagoCodigo } from "../../../shared/types/order"
 import { COSTO_ENVIO } from "../../../shared/constants"
 import axios from "axios"
 
-// Muestra el detalle de error que envía el backend (RFC 7807: { detail }).
-// Las faltas de stock (producto o ingrediente) se muestran genéricas para NO
-// exponer el inventario interno al cliente.
+//muestra el mensaje de error que manda el back (viene en { detail })
+//los errores de stock los mostramos genericos para no exponerle el inventario al cliente
 function mensajeErrorPedido(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const detail = error.response?.data?.detail
@@ -35,7 +34,7 @@ export default function CheckoutPage() {
   const [formaPago, setFormaPago] = useState<FormaPagoCodigo>("EFECTIVO")
 
   const { data: direcciones } = useDirecciones()
-  // Selección explícita del usuario; si es null se usa la principal por defecto.
+  //lo que elige el usuario. si queda null usamos la direccion principal
   const [direccionElegida, setDireccionElegida] = useState<number | null>(null)
   const [addDireccionOpen, setAddDireccionOpen] = useState(false)
 
@@ -43,20 +42,20 @@ export default function CheckoutPage() {
 
   if (items.length === 0) return <Navigate to="/" />
 
-  // Dirección efectiva: la elegida por el usuario, o por defecto la principal (o la primera).
+  //la direccion que se usa: la que eligio el usuario, o si no la principal (o la primera que haya)
   const direccionId =
     direccionElegida ??
     (direcciones && direcciones.length > 0
       ? direcciones.find((d) => d.es_principal)?.id ?? direcciones[0].id
       : null)
 
-  // solo los items que tienen al menos un ingrediente removible
+  //solo los items que tienen al menos un ingrediente que se puede sacar
   const customizableItems = items.filter((item) =>
     item.ingredientes.some((pi) => pi.es_removible)
   )
 
   const sinDirecciones = direcciones && direcciones.length === 0
-  // No se puede confirmar sin una dirección de entrega elegida.
+  //no se puede confirmar sin una direccion de entrega
   const puedeConfirmar = direccionId !== null
 
   return (
@@ -150,9 +149,9 @@ export default function CheckoutPage() {
                   <label key={i.ingrediente.id} className="flex items-center gap-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      // tildado si el id ya está en el array
+                      //queda tildado si el id ya esta en el array
                       checked={item.personalizacion.includes(i.ingrediente.id)}
-                      // al hacer click agrega o saca el id del array
+                      //al hacer click agrega o saca el id del array
                       onChange={() => togglePersonalizacion(item.id, i.ingrediente.id)}
                       className="accent-orange"
                     />
@@ -203,7 +202,7 @@ export default function CheckoutPage() {
       {addDireccionOpen && (
         <DireccionFormModal
           onClose={() => setAddDireccionOpen(false)}
-          // selecciona automáticamente la dirección recién creada
+          //selecciona sola la direccion que se acaba de crear
           onSaved={(saved) => setDireccionElegida(saved.id)}
         />
       )}

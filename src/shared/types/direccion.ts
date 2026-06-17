@@ -1,4 +1,4 @@
-// Espeja DireccionPublic del backend (modules/direccion_entrega/schema.py).
+//refleja el DireccionPublic del back (modules/direccion_entrega/schema.py)
 export interface Direccion {
   id: number
   usuario_id: number
@@ -14,7 +14,7 @@ export interface Direccion {
   created_at: string
 }
 
-// Body de create/update. linea1 y ciudad son obligatorios en el back.
+//body de create/update. linea1 y ciudad son obligatorios en el back
 export interface DireccionPayload {
   alias?: string | null
   linea1: string

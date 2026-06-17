@@ -18,15 +18,15 @@ interface UpdateProfileResponse {
   created_at: string
 }
 
-// custom hook para que el usuario edite sus propios datos (nombre, apellido, celular).
-// pega a PATCH /auth/me, que actualiza al usuario autenticado segun la cookie.
+//hook para que el usuario edite sus propios datos (nombre, apellido, celular)
+//pega a PATCH /auth/me, que actualiza al usuario logueado segun la cookie
 export function useUpdateProfile() {
   const setUser = useAuthStore((s) => s.setUser)
 
   return useMutation({
     mutationFn: (body: UpdateProfileBody) =>
       instance.patch<UpdateProfileResponse>("/auth/me", body).then((r) => r.data),
-    // refrescamos el store con los datos ya persistidos por el back.
+    //refrescamos el store con los datos que ya guardo el back
     onSuccess: (user) => {
       setUser(user)
     },

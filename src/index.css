@@ -7,11 +7,11 @@
   --color-bg-surface: #FFFFFF;
   --color-bg-elevated: #F2F4F6;
 
-  /* Obsidian — color primario de texto y botones principales */
+  /* obsidian: color principal de texto y botones */
   --color-obsidian: #0F172A;
   --color-obsidian-soft: #131B2E;
 
-  /* Naranja — acento secundario (cart buttons, active states, badges) */
+  /* naranja: acento secundario (botones del carrito, estados activos, badges) */
   --color-orange: #FF6B35;
   --color-orange-dim: #E55A26;
 

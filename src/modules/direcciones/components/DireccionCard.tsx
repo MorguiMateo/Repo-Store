@@ -16,7 +16,7 @@ export default function DireccionCard({ direccion, onEdit }: DireccionCardProps)
     }
   }
 
-  // Línea secundaria con los datos que estén cargados (provincia, CP).
+  //segunda linea con los datos que esten cargados (provincia, codigo postal)
   const detalle = [direccion.provincia, direccion.codigo_postal].filter(Boolean).join(" · ")
 
   return (

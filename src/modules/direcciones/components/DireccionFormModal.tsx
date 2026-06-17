@@ -3,10 +3,10 @@ import { useCreateDireccion, useUpdateDireccion } from "../hooks/useDirecciones"
 import type { Direccion, DireccionPayload } from "../../../shared/types/direccion"
 
 interface DireccionFormModalProps {
-  // Si viene una direccion, el modal opera en modo edición; si no, crea una nueva.
+  //si viene una direccion el modal edita, si no crea una nueva
   direccion?: Direccion
   onClose: () => void
-  // Permite a quien lo abre reaccionar con la dirección recién guardada (ej: seleccionarla).
+  //le avisa al que lo abrio cual fue la direccion que se guardo (ej: para seleccionarla)
   onSaved?: (direccion: Direccion) => void
 }
 
@@ -30,7 +30,7 @@ export default function DireccionFormModal({ direccion, onClose, onSaved }: Dire
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Campos opcionales vacíos se mandan como null para no guardar strings vacíos.
+    //los campos opcionales que quedan vacios los mandamos como null, asi no guardamos strings vacios
     const payload: DireccionPayload = {
       alias: alias.trim() === "" ? null : alias.trim(),
       linea1: linea1.trim(),

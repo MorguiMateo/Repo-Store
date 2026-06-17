@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import instance from "../../../shared/api/axios.instance"
 import type { Direccion, DireccionPayload } from "../../../shared/types/direccion"
 
-// Lista las direcciones del usuario logueado (el back filtra por current_user).
+//lista las direcciones del usuario logueado (el back ya filtra por el usuario actual)
 export function useDirecciones() {
   return useQuery({
     queryKey: ["direcciones"],
@@ -39,7 +39,7 @@ export function useDeleteDireccion() {
   })
 }
 
-// PATCH /direcciones/{id}/principal — el back desmarca la anterior principal.
+//PATCH /direcciones/{id}/principal: el back se encarga de desmarcar la que era principal antes
 export function useSetPrincipal() {
   const queryClient = useQueryClient()
   return useMutation({

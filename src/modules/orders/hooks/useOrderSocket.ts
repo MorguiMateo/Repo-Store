@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { API_BASE_URL } from "../../../shared/api/axios.instance"
 
-// Deriva el WS de la misma base que el axios: http(s)://.../api/v1 → ws(s)://.../api/v1/pedidos/ws
+//armamos la url del websocket a partir de la misma base del axios, cambiando http por ws
 const WS_URL = API_BASE_URL.replace(/^http/, "ws") + "/pedidos/ws"
 
 
@@ -13,9 +13,9 @@ interface OrderEvent {
   pedido_id?: number
 }
 
-// Abre un WebSocket y refresca el pedido `id` cuando el backend emite un evento suyo.
-// La cookie httpOnly de sesión viaja sola en el handshake → no manejamos tokens acá.
-// El backend ya filtra para que el cliente reciba solo eventos de sus propios pedidos.
+//abre un websocket y refresca el pedido cuando el back manda un evento de ese pedido
+//la cookie de sesion viaja sola en el handshake, asi que no manejamos tokens aca
+//el back ya filtra para que el cliente reciba solo eventos de sus propios pedidos
 export function useOrderSocket(id: string) {
   const queryClient = useQueryClient()
   const [connected, setConnected] = useState(false)

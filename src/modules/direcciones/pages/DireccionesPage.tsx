@@ -7,7 +7,7 @@ import type { Direccion } from "../../../shared/types/direccion"
 export default function DireccionesPage() {
   const { data: direcciones, isLoading, isError } = useDirecciones()
 
-  // null = modal cerrado; undefined = abierto en modo "crear"; objeto = modo "editar".
+  //undefined = modal en modo "crear", una direccion = modo "editar"
   const [editando, setEditando] = useState<Direccion | undefined>(undefined)
   const [modalOpen, setModalOpen] = useState(false)
 

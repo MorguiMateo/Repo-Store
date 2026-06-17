@@ -8,19 +8,18 @@ export function setupInterceptors(instance: AxiosInstance) {
 
       if (error.response?.status !== 401) return Promise.reject(error)
 
-      // login y refresh: el caller maneja el error directamente
+      //login y refresh: el error lo maneja quien llama
       if (url.includes('/auth/login') || url.includes('/auth/refresh')) return Promise.reject(error)
 
-      // ya se reintentó una vez — evita loop infinito si el retry también da 401
+      //si ya se reintento una vez, lo dejamos pasar asi no se hace un loop infinito
       if (error.config._retry) return Promise.reject(error)
-        //
       error.config._retry = true
-        //
+
       try {
         await instance.post('/auth/refresh')
         return instance(error.config)
       } catch {
-        // /auth/me lo maneja App.tsx → clearUser() → ProtectedRoute redirige a /login
+        //el /auth/me lo maneja App.tsx (limpia el usuario y ProtectedRoute manda al login)
         if (!url.includes('/auth/me')) window.location.href = '/login'
         return Promise.reject(error)
       }

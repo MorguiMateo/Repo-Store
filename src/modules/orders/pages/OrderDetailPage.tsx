@@ -3,10 +3,10 @@ import { useOrder, useCancelOrder } from "../hooks/useOrders"
 import { useOrderSocket } from "../hooks/useOrderSocket"
 import type { OrderStatus } from "../../../shared/types/order"
 
-// estados desde los cuales el cliente puede cancelar su pedido
+//desde que estados el cliente puede cancelar su pedido
 const CANCELLABLE: OrderStatus[] = ["PENDIENTE", "CONFIRMADO"]
 
-// banner según el ?pago= con el que MercadoPago redirige de vuelta (back_urls)
+//banner segun el ?pago= con el que mercado pago te redirige de vuelta
 const PAGO_BANNER: Record<string, { text: string; className: string }> = {
   success: { text: "¡Pago aprobado! Estamos confirmando tu pedido.", className: "bg-success/10 text-success border-success/30" },
   pending: { text: "Tu pago quedó pendiente de acreditación.", className: "bg-warning/10 text-warning border-warning/30" },
@@ -18,9 +18,9 @@ export default function OrderDetailPage() {
   const [searchParams] = useSearchParams()
   const pagoBanner = PAGO_BANNER[searchParams.get("pago") ?? ""]
   const { data: order, isLoading, isError } = useOrder(id!)
-  // suscripción WebSocket: refresca el pedido en vivo cuando cambia de estado
+  //websocket: refresca el pedido en vivo cuando cambia de estado
   const { connected } = useOrderSocket(id!)
-  // renombramos para que isPending e isError no se repitan
+  //los renombramos para que isPending e isError no choquen con los de arriba
   const { mutate: cancelOrder, isPending: isCancelling, isError: cancelError } = useCancelOrder(id!)
 
   if (isLoading) return <p className="py-10 text-center text-text-muted">Cargando pedido...</p>
@@ -32,7 +32,7 @@ export default function OrderDetailPage() {
     </div>
   )
 
-  // true solo si el estado actual permite cancelar, de lo contrario el botón no renderiza
+  //true solo si el estado actual deja cancelar, sino el boton no se muestra
   const cancellable = CANCELLABLE.includes(order.estado_codigo)
 
   return (
